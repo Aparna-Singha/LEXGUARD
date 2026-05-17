@@ -175,18 +175,20 @@ scanned or image-only PDFs are not OCR'd yet, so they may fail with a helpful pa
 
 ## Testing
 
-LEXGUARD includes a lightweight smoke test script for hackathon validation.
+LEXGUARD includes lightweight smoke tests for validating the main hackathon demo flow.
 
-The smoke test checks:
+The smoke tests check:
 
-- `/api/health`
+- health endpoint
 - sample document analysis
 - report generation
+- risk score output
+- legal disclaimer
 - follow-up chat response
 
 ### Run Tests Locally
 
-Start the development server:
+Start the app:
 
 ```bash
 npm run dev

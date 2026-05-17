@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node scripts/smoke-test.mjs",
-    "test:smoke": "node scripts/smoke-test.mjs"
+    "test": "node tests/smoke-test.mjs",
+    "test:smoke": "node tests/smoke-test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.3.0",
