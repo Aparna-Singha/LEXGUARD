@@ -173,6 +173,24 @@ scanned or image-only PDFs are not OCR'd yet, so they may fail with a helpful pa
 9. Ask a follow-up question in chat such as `Can they terminate me without notice?`
 10. Show the grounded clause references and the suggested negotiation next step.
 
+## Testing
+
+LEXGUARD includes a lightweight smoke test script for hackathon validation.
+
+The smoke test checks:
+
+- `/api/health`
+- sample document analysis
+- report generation
+- follow-up chat response
+
+### Run Tests Locally
+
+Start the development server:
+
+```bash
+npm run dev
+
 ### Suggested Questions During Demo
 
 - `What is the most dangerous clause?`
