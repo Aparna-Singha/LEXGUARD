@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import FileUpload from '@/components/FileUpload';
-import DocumentTypeSelector from '@/components/DocumentTypeSelector';
+import { ArrowRight, Shield } from 'lucide-react';
 import AnalysisProgress from '@/components/AnalysisProgress';
 import Disclaimer from '@/components/Disclaimer';
-import { DocumentType, AgentStep } from '@/lib/types';
-import { Shield, ArrowRight } from 'lucide-react';
+import DocumentTypeSelector from '@/components/DocumentTypeSelector';
+import FileUpload from '@/components/FileUpload';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import SampleDocumentPicker from '@/components/SampleDocumentPicker';
+import { SAMPLE_DOCUMENTS, SampleDocumentDefinition } from '@/lib/samples';
+import { AgentStep, DocumentType } from '@/lib/types';
 
 const INITIAL_STEPS: AgentStep[] = [
   { agent: 'Document Parser', status: 'pending', description: 'Extracting text from your document' },
@@ -37,60 +39,78 @@ export default function AnalyzePage() {
       setTimeout(() => {
         setCurrentStep(index);
         setSteps((prev) =>
-          prev.map((step, i) => ({
+          prev.map((step, stepIndex) => ({
             ...step,
-            status: i < index ? 'complete' : i === index ? 'running' : 'pending',
+            status:
+              stepIndex < index ? 'complete' : stepIndex === index ? 'running' : 'pending',
           }))
         );
       }, delay);
     });
   }, []);
 
-  const handleAnalyze = async () => {
-    if (!selectedFile || !documentType) return;
+  const submitAnalysis = useCallback(
+    async (formData: FormData) => {
+      setIsAnalyzing(true);
+      setError(null);
+      setSteps(INITIAL_STEPS);
+      setCurrentStep(0);
+      simulateProgress();
 
-    setIsAnalyzing(true);
-    setError(null);
-    setSteps(INITIAL_STEPS);
-    setCurrentStep(0);
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          body: formData,
+        });
 
-    simulateProgress();
+        const data = await response.json();
 
-    try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('documentType', documentType);
+        if (!response.ok) {
+          throw new Error(data.error || 'Analysis failed');
+        }
 
-      const res = await fetch('/api/analyze', {
-        method: 'POST',
-        body: formData,
-      });
+        setSteps((prev) => prev.map((step) => ({ ...step, status: 'complete' as const })));
+        setCurrentStep(INITIAL_STEPS.length);
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Analysis failed');
+        setTimeout(() => {
+          router.push(`/report/${data.reportId}`);
+        }, 800);
+      } catch (analysisError) {
+        setError(analysisError instanceof Error ? analysisError.message : 'An unexpected error occurred');
+        setIsAnalyzing(false);
+        setSteps((prev) =>
+          prev.map((step) => ({
+            ...step,
+            status: step.status === 'running' ? 'error' : step.status,
+          }))
+        );
       }
+    },
+    [router, simulateProgress]
+  );
 
-      // Complete all steps
-      setSteps((prev) => prev.map((step) => ({ ...step, status: 'complete' as const })));
-      setCurrentStep(steps.length);
-
-      // Navigate to report page
-      setTimeout(() => {
-        router.push(`/report/${data.reportId}`);
-      }, 800);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
-      setIsAnalyzing(false);
-      setSteps((prev) =>
-        prev.map((step) => ({
-          ...step,
-          status: step.status === 'running' ? 'error' : step.status,
-        }))
-      );
+  const handleUploadedDocumentAnalysis = useCallback(() => {
+    if (!selectedFile || !documentType) {
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('documentType', documentType);
+
+    void submitAnalysis(formData);
+  }, [documentType, selectedFile, submitAnalysis]);
+
+  const handleSampleAnalysis = useCallback(
+    (sample: SampleDocumentDefinition) => {
+      const formData = new FormData();
+      formData.append('sampleId', sample.id);
+      formData.append('documentType', sample.documentType);
+
+      void submitAnalysis(formData);
+    },
+    [submitAnalysis]
+  );
 
   return (
     <>
@@ -98,27 +118,21 @@ export default function AnalyzePage() {
 
       <main className="flex-1">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Page header */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-600/10 border border-brand-500/20 mb-4">
               <Shield className="w-3.5 h-3.5 text-brand-400" />
               <span className="text-xs font-medium text-brand-300">Document Analysis</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              Analyze Your Document
-            </h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Analyze Your Document</h1>
             <p className="text-sm text-slate-400">
-              Upload a legal document and select its type to begin the AI risk analysis
+              Upload a legal document or try a fictional sample to begin the AI risk analysis
             </p>
           </div>
 
           {!isAnalyzing ? (
             <div className="space-y-8 animate-fade-in">
-              {/* Upload */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-3">
-                  Upload Document
-                </label>
+                <label className="block text-sm font-medium text-slate-300 mb-3">Upload Document</label>
                 <FileUpload
                   onFileSelect={setSelectedFile}
                   selectedFile={selectedFile}
@@ -126,27 +140,28 @@ export default function AnalyzePage() {
                 />
               </div>
 
-              {/* Document type */}
-              <DocumentTypeSelector
-                value={documentType}
-                onChange={setDocumentType}
+              <SampleDocumentPicker
+                samples={SAMPLE_DOCUMENTS}
+                disabled={isAnalyzing}
+                onAnalyzeSample={handleSampleAnalysis}
               />
 
-              {/* Error */}
+              <DocumentTypeSelector value={documentType} onChange={setDocumentType} />
+
               {error && (
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 animate-fade-in">
                   <p className="text-sm text-red-300">{error}</p>
                 </div>
               )}
 
-              {/* Analyze button */}
               <button
-                onClick={handleAnalyze}
+                type="button"
+                onClick={handleUploadedDocumentAnalysis}
                 disabled={!selectedFile || !documentType}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:shadow-lg hover:shadow-brand-500/25 disabled:hover:shadow-none"
               >
                 <Shield className="w-5 h-5" />
-                Analyze Document
+                Analyze Uploaded Document
                 <ArrowRight className="w-4 h-4" />
               </button>
 

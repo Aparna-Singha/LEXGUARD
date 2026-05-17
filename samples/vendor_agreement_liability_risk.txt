@@ -1,0 +1,16 @@
+FICTIONAL DEMO DOCUMENT ONLY
+This sample vendor agreement was created for LEXGUARD demonstrations and does not relate to any real vendor.
+
+Vendor Agreement for Glass River Supply
+
+In no event shall Glass River Supply be liable for any indirect, incidental, consequential, special, punitive, or exemplary damages, and Glass River Supply's total aggregate liability under this Agreement shall not exceed the fees paid by Customer during the thirty days preceding the claim.
+
+Customer shall indemnify, defend, and hold harmless Glass River Supply, its officers, employees, and contractors from any and all claims, demands, liabilities, damages, losses, judgments, and expenses arising out of Customer's use of the goods or services.
+
+Glass River Supply will use reasonable efforts to meet requested service levels, delivery windows, and response expectations, but no specific uptime, timing, performance benchmark, or remediation commitment is guaranteed.
+
+Glass River Supply may terminate this Agreement or suspend performance immediately, with or without cause, upon written notice to Customer, while Customer may terminate only for a material breach that remains uncured for sixty days.
+
+All goods and services are provided as is, with no warranties of any kind, whether express, implied, statutory, or otherwise, including warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+This fictional demo agreement exists only to support sample analysis inside LEXGUARD.

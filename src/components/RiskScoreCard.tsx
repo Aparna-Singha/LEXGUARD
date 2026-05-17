@@ -36,6 +36,22 @@ const LEVEL_CONFIG: Record<RiskLevel, { color: string; ringColor: string; bg: st
   },
 };
 
+function getScoreDescription(score: number): string {
+  if (score <= 25) {
+    return 'Mostly standard language with relatively limited concern signals.';
+  }
+
+  if (score <= 50) {
+    return 'Some clauses deserve closer review before you agree.';
+  }
+
+  if (score <= 75) {
+    return 'Material risks are present and should be negotiated or clarified.';
+  }
+
+  return 'The document contains severe or one-sided terms that merit very careful review.';
+}
+
 export default function RiskScoreCard({ score, level, recommendation }: RiskScoreCardProps) {
   const config = LEVEL_CONFIG[level];
   const [animatedScore, setAnimatedScore] = useState(0);
@@ -45,8 +61,10 @@ export default function RiskScoreCard({ score, level, recommendation }: RiskScor
     const steps = 60;
     const increment = score / steps;
     let current = 0;
+
     const timer = setInterval(() => {
       current += increment;
+
       if (current >= score) {
         setAnimatedScore(score);
         clearInterval(timer);
@@ -54,6 +72,7 @@ export default function RiskScoreCard({ score, level, recommendation }: RiskScor
         setAnimatedScore(Math.round(current));
       }
     }, duration / steps);
+
     return () => clearInterval(timer);
   }, [score]);
 
@@ -61,10 +80,9 @@ export default function RiskScoreCard({ score, level, recommendation }: RiskScor
   const offset = circumference - (animatedScore / 100) * circumference;
 
   return (
-    <div className={`glass rounded-2xl p-6 animate-fade-in-up shadow-xl ${config.glow}`}>
-      <div className="flex flex-col sm:flex-row items-center gap-6">
-        {/* Score Ring */}
-        <div className="risk-ring shrink-0">
+    <div className={`glass rounded-2xl p-6 shadow-xl ${config.glow}`}>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
+        <div className="risk-ring shrink-0 mx-auto lg:mx-0">
           <svg width="160" height="160" viewBox="0 0 160 160">
             <circle className="ring-bg" cx="80" cy="80" r="65" />
             <circle
@@ -78,32 +96,29 @@ export default function RiskScoreCard({ score, level, recommendation }: RiskScor
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-4xl font-bold ${config.color}`}>
-              {animatedScore}
-            </span>
-            <span className="text-xs text-slate-500 mt-0.5">/ 100</span>
+            <span className={`text-4xl font-bold ${config.color}`}>{animatedScore}</span>
+            <span className="text-xs text-slate-500 mt-0.5">out of 100</span>
           </div>
         </div>
 
-        {/* Details */}
-        <div className="flex-1 text-center sm:text-left">
-          <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
+        <div className="flex-1 text-center lg:text-left">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-3">
             <span
               className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${config.bg} ${config.color}`}
             >
               {level} Risk
             </span>
+            <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-surface-overlay text-slate-300">
+              Contract intelligence score
+            </span>
           </div>
-          <h2 className="text-lg font-semibold text-white mb-1">Overall Risk Assessment</h2>
-          <p className="text-sm text-slate-400 mb-3">
-            {score <= 25 && 'This document appears to have mostly standard, fair terms.'}
-            {score > 25 && score <= 50 && 'Some concerns identified that warrant review.'}
-            {score > 50 && score <= 75 && 'Significant risks detected — careful review needed.'}
-            {score > 75 && 'Critical risks found — professional review strongly recommended.'}
-          </p>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-overlay text-xs">
-            <span className="text-slate-500">Recommendation:</span>
-            <span className={`font-medium ${config.color}`}>{recommendation}</span>
+
+          <h2 className="text-2xl font-semibold text-white mb-2">Overall risk assessment</h2>
+          <p className="text-sm text-slate-400 leading-relaxed mb-4">{getScoreDescription(score)}</p>
+
+          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-overlay text-sm">
+            <span className="text-slate-500">Signing recommendation:</span>
+            <span className={`font-semibold ${config.color}`}>{recommendation}</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,16 @@
+FICTIONAL DEMO DOCUMENT ONLY
+This sample freelancer agreement was created for LEXGUARD demonstrations and does not involve any real client.
+
+Freelancer Services Agreement for Blue Lantern Studio
+
+The Contractor agrees that all deliverables, drafts, concepts, files, designs, code, inventions, know-how, and intellectual property created or contributed under this Agreement shall be deemed works made for hire and shall be owned exclusively by Blue Lantern Studio upon creation.
+
+To the extent any rights do not automatically vest in Blue Lantern Studio, the Contractor hereby assigns all such rights and grants the Client a perpetual, irrevocable, worldwide royalty-free license to use, reproduce, adapt, modify, distribute, and create derivative works from any materials created in connection with the Services.
+
+The Contractor shall indemnify, defend, and hold harmless Blue Lantern Studio and its affiliates from any claims, losses, liabilities, damages, costs, and expenses arising from the Services, the deliverables, or any allegation that the deliverables infringe the rights of a third party.
+
+Invoices submitted by the Contractor shall be payable within sixty days after the Client determines, in its sole discretion, that the applicable milestone has been fully satisfied and accepted.
+
+The Contractor agrees to provide up to ten rounds of revisions and any additional revisions reasonably requested by the Client to achieve final approval, without additional compensation unless the Client elects otherwise in writing.
+
+This fictional demo agreement is provided only for sample analysis and testing.

@@ -6,6 +6,7 @@
 import { GoogleGenAI } from '@google/genai';
 
 let clientInstance: GoogleGenAI | null = null;
+const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 
 function getClient(): GoogleGenAI {
   if (clientInstance) return clientInstance;
@@ -36,9 +37,10 @@ export interface AIGenerateOptions {
 export async function generateText(options: AIGenerateOptions): Promise<string> {
   const client = getClient();
   const { prompt, systemInstruction, temperature = 0.3, maxTokens = 8192, jsonMode = false } = options;
+  const model = process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
 
   const response = await client.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model,
     contents: prompt,
     config: {
       systemInstruction: systemInstruction || undefined,

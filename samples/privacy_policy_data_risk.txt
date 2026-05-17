@@ -1,0 +1,16 @@
+FICTIONAL DEMO DOCUMENT ONLY
+This sample privacy policy was created for LEXGUARD demonstrations and is not associated with a real company.
+
+Privacy Policy for Meadow Circuit App
+
+We may collect personal data, device information, precise location data, browsing activity, purchase history, contact details, identifiers, preferences, uploaded content, and any other information you provide or that we observe through your use of the service.
+
+We may share information with partners, service providers, advertisers, analytics vendors, affiliates, and other third parties for business, marketing, research, personalization, and commercial purposes.
+
+We retain personal information for as long as necessary to fulfill the purposes described in this Policy, to protect our interests, and for other internal business needs, unless a longer period is permitted or required by law.
+
+By continuing to use the service, you consent to the collection, use, disclosure, transfer, and processing of your information as described in this Policy.
+
+This Policy is subject to change without prior notice, and any modifications become effective immediately upon posting to the service.
+
+This fictional demo policy is intended only for product analysis demonstrations.

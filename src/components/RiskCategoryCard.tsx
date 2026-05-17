@@ -1,53 +1,81 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { RiskCategoryDetail } from '@/lib/types';
 
 interface RiskCategoryCardProps {
   name: string;
   category: RiskCategoryDetail;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 function getScoreColor(score: number) {
-  if (score <= 25) return { text: 'text-risk-low', bg: 'bg-risk-low', barBg: 'bg-risk-low-bg' };
-  if (score <= 50) return { text: 'text-risk-medium', bg: 'bg-risk-medium', barBg: 'bg-risk-medium-bg' };
-  if (score <= 75) return { text: 'text-risk-high', bg: 'bg-risk-high', barBg: 'bg-risk-high-bg' };
-  return { text: 'text-risk-critical', bg: 'bg-risk-critical', barBg: 'bg-risk-critical-bg' };
+  if (score <= 25) {
+    return {
+      text: 'text-risk-low',
+      badge: 'bg-risk-low-bg text-risk-low',
+      progress: 'bg-risk-low',
+    };
+  }
+
+  if (score <= 50) {
+    return {
+      text: 'text-risk-medium',
+      badge: 'bg-risk-medium-bg text-risk-medium',
+      progress: 'bg-risk-medium',
+    };
+  }
+
+  if (score <= 75) {
+    return {
+      text: 'text-risk-high',
+      badge: 'bg-risk-high-bg text-risk-high',
+      progress: 'bg-risk-high',
+    };
+  }
+
+  return {
+    text: 'text-risk-critical',
+    badge: 'bg-risk-critical-bg text-risk-critical',
+    progress: 'bg-risk-critical',
+  };
 }
 
 export default function RiskCategoryCard({ name, category, icon }: RiskCategoryCardProps) {
   const colors = getScoreColor(category.score);
+  const riskCount = category.risks.length;
 
   return (
-    <div className="glass rounded-xl p-4 hover:border-border-light transition-all group">
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className={`${colors.text} transition-transform group-hover:scale-110`}>{icon}</span>
-          <h3 className="text-sm font-semibold text-white">{name}</h3>
+    <div className="glass rounded-2xl p-5 border border-white/6 hover:border-border-light transition-all">
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors.badge}`}>
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white">{name}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Category intelligence</p>
+          </div>
         </div>
-        <span className={`text-lg font-bold ${colors.text}`}>{category.score}</span>
+        <div className="text-right shrink-0">
+          <p className={`text-2xl font-bold leading-none ${colors.text}`}>{category.score}</p>
+          <p className="text-[11px] text-slate-500 mt-1">/100</p>
+        </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="w-full h-1.5 rounded-full bg-surface-overlay mb-3 overflow-hidden">
+      <div className="w-full h-2 rounded-full bg-surface-overlay mb-4 overflow-hidden">
         <div
-          className={`h-full rounded-full ${colors.bg} transition-all duration-1000 ease-out`}
+          className={`h-full rounded-full ${colors.progress} transition-all duration-1000 ease-out`}
           style={{ width: `${category.score}%` }}
         />
       </div>
 
-      <p className="text-xs text-slate-400 mb-3 line-clamp-2">{category.summary}</p>
+      <div className="flex items-center justify-between text-xs mb-3">
+        <span className="text-slate-500">Risk count</span>
+        <span className={`px-2 py-1 rounded-full font-medium ${colors.badge}`}>{riskCount}</span>
+      </div>
 
-      {category.risks.length > 0 && (
-        <ul className="space-y-1">
-          {category.risks.slice(0, 3).map((risk, i) => (
-            <li key={i} className="flex items-start gap-2 text-xs text-slate-500">
-              <span className={`mt-1.5 w-1 h-1 rounded-full shrink-0 ${colors.bg}`} />
-              <span className="line-clamp-1">{risk}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <p className="text-sm text-slate-400 leading-relaxed">{category.summary}</p>
     </div>
   );
 }

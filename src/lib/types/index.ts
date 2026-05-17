@@ -91,7 +91,17 @@ export interface HiddenObligation {
 
 // ─── Full Risk Report ───────────────────────────────────────────
 export interface RiskReport {
+  id?: string;
+  documentName?: string;
   documentType: string;
+  createdAt?: string;
+  analysisMode?: 'ai_enriched' | 'deterministic_fallback';
+  analysisSource?: 'gemini_enriched' | 'fallback_risk_engine';
+  fallbackReason?:
+    | 'missing_api_key'
+    | 'ai_failed'
+    | 'invalid_ai_output'
+    | 'forced_dev_mock_mode';
   overallRiskScore: number;
   overallRiskLevel: RiskLevel;
   executiveSummary: string;
@@ -123,6 +133,13 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+export interface RelevantClauseReference {
+  clauseId: string;
+  clauseType: ClauseType;
+  severity: RiskLevel;
+  evidence: string;
+}
+
 // ─── Agent Step ─────────────────────────────────────────────────
 export interface AgentStep {
   agent: string;
@@ -132,13 +149,17 @@ export interface AgentStep {
 
 // ─── API Response Types ─────────────────────────────────────────
 export interface AnalyzeResponse {
+  success: true;
   reportId: string;
   report: RiskReport;
 }
 
 export interface ChatResponse {
   answer: string;
-  evidence?: string[];
+  relevantClauses: RelevantClauseReference[];
+  riskLevel: RiskLevel;
+  suggestedNextStep: string;
+  disclaimer: string;
 }
 
 export interface ErrorResponse {

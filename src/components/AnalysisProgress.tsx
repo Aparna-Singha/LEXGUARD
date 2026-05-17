@@ -34,7 +34,6 @@ export default function AnalysisProgress({ steps, currentStep }: AnalysisProgres
           const isActive = index === currentStep;
           const isComplete = step.status === 'complete';
           const isError = step.status === 'error';
-          const isPending = step.status === 'pending';
 
           return (
             <div
