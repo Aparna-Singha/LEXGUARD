@@ -28,6 +28,7 @@ const ICONS: Record<SampleDocumentDefinition['documentType'], ReactNode> = {
   'Terms of Service': <FileText className="w-4 h-4" />,
   'Insurance Policy': <FileText className="w-4 h-4" />,
   'Quotation / Purchase Terms': <FileText className="w-4 h-4" />,
+  'Ticket Terms': <FileText className="h-5 w-5" />,
   Other: <FileText className="w-4 h-4" />,
 };
 

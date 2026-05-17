@@ -192,6 +192,7 @@ Available sample scenarios include:
 - subscription terms with hidden fees
 - privacy policy with data-sharing risk
 - vendor agreement with liability risk
+- ticket terms with hidden liability and no-refund risk
 
 Use sample documents if you do not want to upload a file.
 
@@ -237,7 +238,7 @@ Screenshot placeholders:
 
 ## GitHub Repository
 
-- `[Add GitHub repository link here]`
+- `https://github.com/Aparna-Singha/LEXGUARD`
 
 ## Disclaimer
 

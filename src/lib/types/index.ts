@@ -10,6 +10,7 @@ export const DOCUMENT_TYPES = [
   'Terms of Service',
   'Insurance Policy',
   'Quotation / Purchase Terms',
+  'Ticket Terms',
   'Other',
 ] as const;
 

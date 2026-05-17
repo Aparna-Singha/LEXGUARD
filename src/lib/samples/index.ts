@@ -70,6 +70,19 @@ export const SAMPLE_DOCUMENTS: SampleDocumentDefinition[] = [
       'No warranties',
     ],
   },
+    {
+    id: 'ticket_terms_hidden_liability',
+    title: 'Ticket Terms with Hidden Liability',
+    description:
+      'A fictional event ticket policy with no-refund rules, liability waiver, data sharing, and unilateral change terms.',
+    fileName: 'ticket_terms_hidden_liability.txt',
+    documentType: 'Ticket Terms',
+    highlights: [
+      'No refunds',
+      'Assumes all risk',
+      'Terms can change without notice',
+    ],
+  },
 ];
 
 export function getSampleDocumentById(sampleId: string): SampleDocumentDefinition | null {
